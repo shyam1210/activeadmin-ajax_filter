@@ -86,7 +86,7 @@ $ ->
 
         onInitialize: ->
           selectize = this
-          selectedValue = select.data('selected-value')
+          selectedValue = select.data('selected-value') || ''
 
           # Multi-select support
           selectedValues = selectedValue.split(' ')
