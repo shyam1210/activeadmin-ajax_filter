@@ -87,16 +87,27 @@ $ ->
         onInitialize: ->
           selectize = this
           selectedValue = select.data('selected-value')
-          selectedRansack = "#{valueField}_eq"
+
+          # Multi-select support
+          selectedValues = selectedValue.split(' ')
+          if selectedValues.length > 1
+            selectedRansack = "#{valueField}_in"
+          else
+            selectedRansack = "#{valueField}_eq"
 
           if selectedValue
             q = {}
-            q[selectedRansack] = selectedValue
+            if selectedValues.length > 1
+              q[selectedRansack] = selectedValues
+            else
+              q[selectedRansack] = selectedValue
 
             loadOptions(q, (res)->
               if res && res.length
-                selectize.addOption(res[0])
-                selectize.addItem(res[0][valueField])
+                res.forEach (item) ->
+                  selectize.addOption item
+                  selectize.addItem item[valueField]
+                  return
             )
 
           ajaxFields.forEach (field) ->
